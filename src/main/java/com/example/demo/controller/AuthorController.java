@@ -51,20 +51,6 @@ public class AuthorController {
 		
 	}
 	
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteAuthorById(@PathVariable("id") Long id) throws InvalidIdException{
-		try {
-			
-			Author author =authorService.getAuthorById(id);
-			authorService.deleteAuthor(author.getId());
-			return ResponseEntity.ok().body(author);
-		}
-		catch(InvalidIdException e) {
-			
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-		
-	}
 	
 	@PutMapping("/update/{id}")
 	public ResponseEntity<?> updateAuthor(@PathVariable("id") Long id, @RequestBody Author newauthor)throws InvalidIdException{

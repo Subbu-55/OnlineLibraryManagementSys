@@ -51,20 +51,6 @@ public class PublisherController {
 		
 	}
 	
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deletePublisherById(@PathVariable("id") Long id) throws InvalidIdException{
-		try {
-			
-			Publisher publisher =publisherService.getPublisherById(id);
-			publisherService.deleteBook(publisher.getId());
-			return ResponseEntity.ok().body(publisher);
-		}
-		catch(InvalidIdException e) {
-			
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-		
-	}
 	
 	@PutMapping("/update/{id}")
 	public ResponseEntity<?> updatePublisher(@PathVariable("id") Long id, @RequestBody Publisher newpublisher)throws InvalidIdException{

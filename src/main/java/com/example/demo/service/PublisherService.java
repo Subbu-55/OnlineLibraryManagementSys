@@ -37,9 +37,5 @@ public class PublisherService {
 		return publisher;
 	}
 
-	public void deleteBook(Long id) {
-		// TODO Auto-generated method stub
-		publisherRepository.deleteById(id);
-	}
 	
 }

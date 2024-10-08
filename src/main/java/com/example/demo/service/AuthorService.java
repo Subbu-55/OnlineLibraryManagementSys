@@ -38,10 +38,7 @@ public class AuthorService {
 		return author;
 	}
 
-	public void deleteAuthor(Long id) {
-		// TODO Auto-generated method stub
-		authorRepository.deleteById(id);
-	}
+	
 
 	
 }
