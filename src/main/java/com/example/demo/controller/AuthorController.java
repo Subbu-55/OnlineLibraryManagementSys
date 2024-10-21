@@ -17,14 +17,14 @@ import com.example.demo.exception.InvalidIdException;
 import com.example.demo.model.Author;
 import com.example.demo.model.Book;
 import com.example.demo.model.Publisher;
-import com.example.demo.service.AuthorService;
+import com.example.demo.service.AuthorServiceImpl;
 
 @RestController
 @RequestMapping("/author")
 public class AuthorController {
 
 	@Autowired
-	private AuthorService authorService;
+	private AuthorServiceImpl authorService;
 	
 	@PostMapping("/add")
 	public Author insertAuthor(@RequestBody Author author) {
@@ -68,4 +68,14 @@ public class AuthorController {
 		}
 		
 	}
+	@DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteAuthor(@PathVariable("id") Long id) {
+        try {
+            authorService.deleteAuthor(id);
+            return ResponseEntity.ok().body("Author deleted successfully");
+        } catch (InvalidIdException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+	
 }

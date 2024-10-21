@@ -18,14 +18,15 @@ public class Book {
 	
 	private String title;
 	
+	
 	private String publicationDate;
 	
 	@ManyToOne
-	@JoinColumn(name = "author_id", nullable = false)
+	@JoinColumn(name = "author_id", nullable = true)
 	private Author author;
 	
 	@ManyToOne
-	@JoinColumn(name = "publisher_id", nullable = false)
+	@JoinColumn(name = "publisher_id", nullable = true)
 	private Publisher publisher;
 
 	public Long getId() {
