@@ -48,16 +48,11 @@ public class PublisherServiceImpl implements PublisherService{
 	}
 
 	@Override
-	@Transactional // Ensure this method is annotated
+	@Transactional 
 	public void deletePublisher(Long id) throws InvalidIdException {
-	    Publisher publisher = getPublisherById(id); // Fetch the author first
-	 
-	    // Check if author exists before attempting to update books
+	    Publisher publisher = getPublisherById(id); 
 	    if (publisher != null) {
-	        // Update all books to set author to null
 	        bookRepository.updatePublisherToNull(id);
-	        
-	        // Now delete the author
 	        publisherRepository.delete(publisher);
 	    } else {
 	        throw new InvalidIdException("Author not found for id: " + id);
