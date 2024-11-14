@@ -15,18 +15,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.InvalidIdException;
 import com.example.demo.model.Author;
+<<<<<<< HEAD
+=======
+import com.example.demo.model.Book;
+import com.example.demo.model.Publisher;
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 import com.example.demo.service.AuthorServiceImpl;
 
 @RestController
 @RequestMapping("/author")
 public class AuthorController {
 
+<<<<<<< HEAD
 	private  AuthorServiceImpl authorService;
 
     @Autowired
     public AuthorController(AuthorServiceImpl authorService) {
         this.authorService = authorService;
     }
+=======
+	@Autowired
+	private AuthorServiceImpl authorService;
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 	
 	@PostMapping("/add")
 	public Author insertAuthor(@RequestBody Author author) {
@@ -40,7 +50,11 @@ public class AuthorController {
 	}
 	
 	@GetMapping("/get/{id}")
+<<<<<<< HEAD
 	public ResponseEntity<Author> getAuthorById(@PathVariable("id") Long id) throws InvalidIdException{
+=======
+	public ResponseEntity<?> getAuthorById(@PathVariable("id") Long id) throws InvalidIdException{
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 		try {
 			
 			Author author =authorService.getAuthorById(id);
@@ -48,14 +62,22 @@ public class AuthorController {
 		}
 		catch(InvalidIdException e) {
 			
+<<<<<<< HEAD
 			return ResponseEntity.badRequest().body(null);
+=======
+			return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 		}
 		
 	}
 	
 	
 	@PutMapping("/update/{id}")
+<<<<<<< HEAD
 	public ResponseEntity<Author> updateAuthor(@PathVariable("id") Long id, @RequestBody Author newauthor)throws InvalidIdException{
+=======
+	public ResponseEntity<?> updateAuthor(@PathVariable("id") Long id, @RequestBody Author newauthor)throws InvalidIdException{
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 		try {
 			 
 			Author author = authorService.getAuthorById(id);
@@ -66,12 +88,20 @@ public class AuthorController {
 			
 		}
 		catch(InvalidIdException e) {
+<<<<<<< HEAD
 		    return ResponseEntity.badRequest().body(null);
+=======
+		    return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 		}
 		
 	}
 	@DeleteMapping("/delete/{id}")
+<<<<<<< HEAD
     public ResponseEntity<String> deleteAuthor(@PathVariable("id") Long id) {
+=======
+    public ResponseEntity<?> deleteAuthor(@PathVariable("id") Long id) {
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         try {
             authorService.deleteAuthor(id);
             return ResponseEntity.ok().body("Author deleted successfully");

@@ -12,16 +12,24 @@ import com.example.demo.model.Author;
 import com.example.demo.model.Book;
 import com.example.demo.model.Publisher;
 import com.example.demo.service.AuthorServiceImpl;
+<<<<<<< HEAD
 import com.example.demo.service.BookServiceImpl;
 import com.example.demo.service.PublisherServiceImpl;
 
 
+=======
+import com.example.demo.service.BookService;
+import com.example.demo.service.PublisherServiceImpl;
+
+import lombok.RequiredArgsConstructor;
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 
 @RestController
 @RequestMapping("/book")
 
 public class BookController {
 
+<<<<<<< HEAD
 	private final BookServiceImpl bookService;
     private final AuthorServiceImpl authorService;
     private final PublisherServiceImpl publisherService;
@@ -33,6 +41,22 @@ public class BookController {
         this.publisherService = publisherService;
     }
 
+=======
+	@Autowired
+    private BookService bookService;
+	
+	@Autowired
+    private AuthorServiceImpl authorService;
+	
+	@Autowired
+    private PublisherServiceImpl publisherService;
+
+//    @PostMapping("/add")
+//    public Book insertBook(@RequestBody Book book) {
+//        return bookService.insert(book);
+//    }
+    
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
     @PostMapping("/add")
     public ResponseEntity<Book> createBook(@RequestBody Book book) throws InvalidIdException {
         try {
@@ -49,28 +73,48 @@ public class BookController {
     }
 
     @GetMapping("/get/{id}")
+<<<<<<< HEAD
     public ResponseEntity<Book> getBookById(@PathVariable("id") Long id) {
+=======
+    public ResponseEntity<?> getBookById(@PathVariable("id") Long id) {
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         try {
             Book book = bookService.getBookById(id);
             return ResponseEntity.ok().body(book);
         } catch (InvalidIdException e) {
+<<<<<<< HEAD
             return ResponseEntity.badRequest().body(null);
+=======
+            return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         }
     }
 
     @DeleteMapping("/delete/{id}")
+<<<<<<< HEAD
     public ResponseEntity<Book> deleteBookById(@PathVariable("id") Long id) {
+=======
+    public ResponseEntity<?> deleteBookById(@PathVariable("id") Long id) {
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         try {
             Book book = bookService.getBookById(id);
             bookService.deleteBook(book.getId());
             return ResponseEntity.ok().body(book);
         } catch (InvalidIdException e) {
+<<<<<<< HEAD
             return ResponseEntity.badRequest().body(null);
+=======
+            return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         }
     }
 
     @PutMapping("/update/{id}")
+<<<<<<< HEAD
     public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @RequestBody Book newbook) {
+=======
+    public ResponseEntity<?> updateBook(@PathVariable("id") Long id, @RequestBody Book newbook) {
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         try {
             Book book = bookService.getBookById(id);
             if (newbook.getTitle() != null)
@@ -90,17 +134,29 @@ public class BookController {
             return ResponseEntity.ok().body(book);
 
         } catch (InvalidIdException e) {
+<<<<<<< HEAD
             return ResponseEntity.badRequest().body(null);
+=======
+            return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         }
     }
 
     @GetMapping("/{authorId}")
+<<<<<<< HEAD
     public ResponseEntity<List<Book>> getBooksByAuthorId(@PathVariable("authorId") Long authorId) {
+=======
+    public ResponseEntity<?> getBooksByAuthorId(@PathVariable("authorId") Long authorId) {
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         try {
             List<Book> books = bookService.getBooksByAuthorId(authorId);
             return ResponseEntity.ok().body(books);
         } catch (InvalidIdException e) {
+<<<<<<< HEAD
             return ResponseEntity.badRequest().body(null);
+=======
+            return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         }
     }
 

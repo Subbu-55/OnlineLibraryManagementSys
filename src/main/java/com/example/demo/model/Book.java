@@ -2,6 +2,10 @@ package com.example.demo.model;
 
 
 import jakarta.persistence.Entity;
+<<<<<<< HEAD
+=======
+import jakarta.persistence.FetchType;
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;

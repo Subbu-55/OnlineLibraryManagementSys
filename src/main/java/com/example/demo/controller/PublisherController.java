@@ -14,19 +14,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.InvalidIdException;
+<<<<<<< HEAD
 import com.example.demo.model.Publisher;
+=======
+import com.example.demo.model.Author;
+import com.example.demo.model.Book;
+import com.example.demo.model.Publisher;
+import com.example.demo.service.AuthorServiceImpl;
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 import com.example.demo.service.PublisherServiceImpl;
 
 @RestController
 @RequestMapping("/publisher")
 public class PublisherController {
 
+<<<<<<< HEAD
 	
 	private PublisherServiceImpl publisherService;
 	@Autowired
 	public PublisherController(PublisherServiceImpl publisherService) {
 		this.publisherService= publisherService;
 	}
+=======
+	@Autowired
+	private PublisherServiceImpl publisherService;
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 	
 	@PostMapping("/add")
 	public Publisher insertAuthor(@RequestBody Publisher publisher) {
@@ -39,7 +51,11 @@ public class PublisherController {
 	}
 	
 	@GetMapping("/get/{id}")
+<<<<<<< HEAD
 	public ResponseEntity<Publisher> getPublisherById(@PathVariable("id") Long id) throws InvalidIdException{
+=======
+	public ResponseEntity<?> getPublisherById(@PathVariable("id") Long id) throws InvalidIdException{
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 		try {
 			
 			Publisher publisher =publisherService.getPublisherById(id);
@@ -47,14 +63,22 @@ public class PublisherController {
 		}
 		catch(InvalidIdException e) {
 			
+<<<<<<< HEAD
 			return ResponseEntity.badRequest().body(null);
+=======
+			return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 		}
 		
 	}
 	
 	
 	@PutMapping("/update/{id}")
+<<<<<<< HEAD
 	public ResponseEntity<Publisher> updatePublisher(@PathVariable("id") Long id, @RequestBody Publisher newpublisher)throws InvalidIdException{
+=======
+	public ResponseEntity<?> updatePublisher(@PathVariable("id") Long id, @RequestBody Publisher newpublisher)throws InvalidIdException{
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 		try {
 			 
 			Publisher publisher = publisherService.getPublisherById(id);
@@ -65,13 +89,21 @@ public class PublisherController {
 			
 		}
 		catch(InvalidIdException e) {
+<<<<<<< HEAD
 		    return ResponseEntity.badRequest().body(null);
+=======
+		    return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 		}
 		
 	}
 	
 	@DeleteMapping("/delete/{id}")
+<<<<<<< HEAD
     public ResponseEntity<String> deleteAuthor(@PathVariable("id") Long id) {
+=======
+    public ResponseEntity<?> deleteAuthor(@PathVariable("id") Long id) {
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         try {
             publisherService.deletePublisher(id);
             return ResponseEntity.ok().body("Publisher deleted successfully");

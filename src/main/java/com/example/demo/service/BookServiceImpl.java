@@ -20,6 +20,7 @@ import com.example.demo.repository.PublisherRepository;
 @Service
 public class BookServiceImpl implements BookService {
  
+<<<<<<< HEAD
 	private  BookRepository bookRepository;
     private  AuthorRepository authorRepository;
     private  PublisherRepository publisherRepository;
@@ -33,6 +34,19 @@ public class BookServiceImpl implements BookService {
         this.authorService = authorService;
     }
 
+=======
+    @Autowired
+    private BookRepository bookRepository;
+ 
+    @Autowired
+    private AuthorRepository authorRepository;
+ 
+    @Autowired
+    private PublisherRepository publisherRepository;
+ 
+    @Autowired
+    private AuthorServiceImpl authorService;
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
  
     @Override
     public List<Book> getAll() {
@@ -73,7 +87,11 @@ public class BookServiceImpl implements BookService {
                         book.getTitle().contains(keyword) ||
                         (book.getAuthor() != null && book.getAuthor().getName().contains(keyword)) ||
                         (book.getPublisher() != null && book.getPublisher().getName().contains(keyword)))
+<<<<<<< HEAD
                 .toList();
+=======
+                .collect(Collectors.toList());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
     }
  
     @Override
@@ -84,12 +102,20 @@ public class BookServiceImpl implements BookService {
             return books.stream()
                     .sorted((book1, book2) -> "title".equalsIgnoreCase(sortBy) ?
                             book1.getTitle().compareTo(book2.getTitle()) : 0)
+<<<<<<< HEAD
                     .toList();
+=======
+                    .collect(Collectors.toList());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         }
  
         List<Book> exactMatchBooks = books.stream()
                 .filter(book -> book.getTitle().equalsIgnoreCase(keyword))
+<<<<<<< HEAD
                 .toList();
+=======
+                .collect(Collectors.toList());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
  
         if (!exactMatchBooks.isEmpty()) {
             return exactMatchBooks;
@@ -108,7 +134,11 @@ public class BookServiceImpl implements BookService {
                         return 0;
                     }
                 })
+<<<<<<< HEAD
                 .toList();
+=======
+                .collect(Collectors.toList());
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
     }
  
     @Override
@@ -123,6 +153,7 @@ public class BookServiceImpl implements BookService {
         if (bookRepository.existsByTitle(book.getTitle())) {
             throw new InvalidIdException("A book with the same title already exists.");
         }
+<<<<<<< HEAD
         if (book.getAuthor() != null && book.getAuthor().getId() != null) {
             Optional<Author> authorOptional = authorRepository.findById(book.getAuthor().getId());
             if (authorOptional.isPresent()) {
@@ -141,6 +172,8 @@ public class BookServiceImpl implements BookService {
                 throw new InvalidIdException("Publisher with the given ID does not exist.");
             }
         }
+=======
+>>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         return bookRepository.save(book);
     }
 }
