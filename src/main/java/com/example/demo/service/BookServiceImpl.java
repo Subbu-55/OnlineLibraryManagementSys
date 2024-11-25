@@ -1,67 +1,46 @@
 package com.example.demo.service;
- 
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
- 
-import com.example.demo.exception.InvalidIdException;
 
+import com.example.demo.exception.InvalidIdException;
 import com.example.demo.model.Author;
 import com.example.demo.model.Book;
 import com.example.demo.model.Publisher;
 import com.example.demo.repository.AuthorRepository;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.repository.PublisherRepository;
- 
+
 @Service
 public class BookServiceImpl implements BookService {
- 
-<<<<<<< HEAD
-	private  BookRepository bookRepository;
-    private  AuthorRepository authorRepository;
-    private  PublisherRepository publisherRepository;
-    private  AuthorServiceImpl authorService;
+
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final PublisherRepository publisherRepository;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository, PublisherRepository publisherRepository, AuthorServiceImpl authorService) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository, PublisherRepository publisherRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.publisherRepository = publisherRepository;
-        this.authorService = authorService;
     }
 
-=======
-    @Autowired
-    private BookRepository bookRepository;
- 
-    @Autowired
-    private AuthorRepository authorRepository;
- 
-    @Autowired
-    private PublisherRepository publisherRepository;
- 
-    @Autowired
-    private AuthorServiceImpl authorService;
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
- 
     @Override
     public List<Book> getAll() {
         return bookRepository.findAll();
     }
- 
+
     @Override
     public Book getBookById(Long id) throws InvalidIdException {
-        Optional<Book> optional = bookRepository.findById(id);
-        if (!optional.isPresent()) {
-            throw new InvalidIdException("Book ID is incorrect");
-        }
-        return optional.get();
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new InvalidIdException("Book ID is incorrect"));
     }
- 
+
     @Override
     public void deleteBook(Long id) throws InvalidIdException {
         if (!bookRepository.existsById(id)) {
@@ -69,58 +48,41 @@ public class BookServiceImpl implements BookService {
         }
         bookRepository.deleteById(id);
     }
- 
+
     @Override
     public List<Book> getBooksByAuthorId(Long authorId) throws InvalidIdException {
-        Author author = authorService.getAuthorById(authorId);
-        if (author == null) {
-            throw new InvalidIdException("Invalid author ID");
-        }
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new InvalidIdException("Invalid author ID"));
         return bookRepository.findByAuthor(author);
     }
- 
+
     @Override
     public List<Book> searchBooks(String keyword) {
-        List<Book> books = bookRepository.findAll();
-        return books.stream()
-                .filter(book ->
-                        book.getTitle().contains(keyword) ||
+        return bookRepository.findAll().stream()
+                .filter(book -> book.getTitle().contains(keyword) ||
                         (book.getAuthor() != null && book.getAuthor().getName().contains(keyword)) ||
                         (book.getPublisher() != null && book.getPublisher().getName().contains(keyword)))
-<<<<<<< HEAD
-                .toList();
-=======
                 .collect(Collectors.toList());
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
     }
- 
+
     @Override
     public List<Book> searchAndSortBooks(String keyword, String sortBy) {
         List<Book> books = bookRepository.findAll();
- 
+
         if (keyword == null || keyword.isEmpty()) {
             return books.stream()
                     .sorted((book1, book2) -> "title".equalsIgnoreCase(sortBy) ?
                             book1.getTitle().compareTo(book2.getTitle()) : 0)
-<<<<<<< HEAD
-                    .toList();
-=======
                     .collect(Collectors.toList());
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
         }
- 
+
         List<Book> exactMatchBooks = books.stream()
                 .filter(book -> book.getTitle().equalsIgnoreCase(keyword))
-<<<<<<< HEAD
-                .toList();
-=======
                 .collect(Collectors.toList());
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
- 
         if (!exactMatchBooks.isEmpty()) {
             return exactMatchBooks;
         }
- 
+
         return books.stream()
                 .filter(book -> book.getTitle().contains(keyword) ||
                         (book.getAuthor() != null && book.getAuthor().getName().contains(keyword)) ||
@@ -134,46 +96,70 @@ public class BookServiceImpl implements BookService {
                         return 0;
                     }
                 })
-<<<<<<< HEAD
-                .toList();
-=======
                 .collect(Collectors.toList());
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
     }
- 
+
     @Override
     public Map<String, Long> countBooksByAuthor() {
-        List<Book> books = bookRepository.findAll();
-        return books.stream()
+        return bookRepository.findAll().stream()
                 .collect(Collectors.groupingBy(book -> book.getAuthor().getName(), Collectors.counting()));
     }
- 
+
     @Override
-    public Book saveBook(Book book) throws InvalidIdException{
+    public Book saveBook(Book book) throws InvalidIdException {
+        if (book.getTitle() == null) {
+            throw new InvalidIdException("A book with the same title already exists.");
+        }
+        
         if (bookRepository.existsByTitle(book.getTitle())) {
             throw new InvalidIdException("A book with the same title already exists.");
         }
-<<<<<<< HEAD
+
+        // Validate and set the author
         if (book.getAuthor() != null && book.getAuthor().getId() != null) {
-            Optional<Author> authorOptional = authorRepository.findById(book.getAuthor().getId());
-            if (authorOptional.isPresent()) {
-                book.getAuthor().setName(authorOptional.get().getName());
-            } else {
-                throw new InvalidIdException("Author with the given ID does not exist.");
-            }
+            Author author = authorRepository.findById(book.getAuthor().getId())
+                    .orElseThrow(() -> new InvalidIdException("Author with the given ID does not exist."));
+            book.setAuthor(author);
         }
 
-        // Fetch and set the publisher name using the publisher ID
+        // Validate and set the publisher
         if (book.getPublisher() != null && book.getPublisher().getId() != null) {
-            Optional<Publisher> publisherOptional = publisherRepository.findById(book.getPublisher().getId());
-            if (publisherOptional.isPresent()) {
-                book.getPublisher().setName(publisherOptional.get().getName());
-            } else {
-                throw new InvalidIdException("Publisher with the given ID does not exist.");
-            }
+            Publisher publisher = publisherRepository.findById(book.getPublisher().getId())
+                    .orElseThrow(() -> new InvalidIdException("Publisher with the given ID does not exist."));
+            book.setPublisher(publisher);
         }
-=======
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
+
         return bookRepository.save(book);
+    }
+
+    @Override
+    public Book updateBook(Long id, Book newBook) throws InvalidIdException {
+        Book existingBook = getBookById(id); // Ensure this method is correctly fetching the book
+
+        // Check if the existing book is found
+        if (existingBook == null) {
+            throw new InvalidIdException("Book not found with ID: " + id);
+        }
+
+        // Update the title only if it's different
+        if (newBook.getTitle() != null && !newBook.getTitle().equals(existingBook.getTitle())) {
+            existingBook.setTitle(newBook.getTitle());
+        }
+
+        // Update author if provided
+        if (newBook.getAuthor() != null) {
+            Author author = authorRepository.findById(newBook.getAuthor().getId())
+                    .orElseThrow(() -> new InvalidIdException("Author with the given ID does not exist."));
+            existingBook.setAuthor(author);
+        }
+
+        // Update publisher if provided
+        if (newBook.getPublisher() != null) {
+            Publisher publisher = publisherRepository.findById(newBook.getPublisher().getId())
+                    .orElseThrow(() -> new InvalidIdException("Publisher with the given ID does not exist."));
+            existingBook.setPublisher(publisher);
+        }
+
+        return bookRepository.save(existingBook); // Ensure this returns the updated book
     }
 }

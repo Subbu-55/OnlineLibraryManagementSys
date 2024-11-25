@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.service;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,9 +17,8 @@ import com.example.demo.exception.InvalidIdException;
 import com.example.demo.model.Author;
 import com.example.demo.repository.AuthorRepository;
 import com.example.demo.repository.BookRepository;
-import com.example.demo.service.AuthorServiceImpl;
 
- class AuthorServiceImplTest {
+class AuthorServiceImplTest {
 
     @Mock
     private AuthorRepository authorRepository;
@@ -30,17 +29,20 @@ import com.example.demo.service.AuthorServiceImpl;
     @InjectMocks
     private AuthorServiceImpl authorService;
 
+    private Author author;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        author = new Author();
+        author.setId(1L);
+        author.setName("Subbu");
+        author.setIsDeleted("false");
     }
 
+    // Test cases for insert
     @Test
-     void testInsertAuthor() {
-        
-        Author author = new Author();
-        author.setName("Subbu");
-
+    void testInsertAuthor() {
         when(authorRepository.save(author)).thenReturn(author);
 
         Author savedAuthor = authorService.insert(author);
@@ -49,15 +51,19 @@ import com.example.demo.service.AuthorServiceImpl;
         assertEquals("Subbu", savedAuthor.getName());
     }
 
+   
+
+    // Test cases for getAll
     @Test
-     void testGetAllAuthors() {
-       
+    void testGetAllAuthors() {
         Author author1 = new Author();
         author1.setName("Subbu");
+        author1.setIsDeleted("false");
         Author author2 = new Author();
         author2.setName("Sharma");
+        author2.setIsDeleted("false");
 
-        when(authorRepository.findAll()).thenReturn(Arrays.asList(author1, author2));
+        when(authorRepository.findAllActiveAuthors()).thenReturn(Arrays.asList(author1, author2));
 
         List<Author> authors = authorService.getAll();
 
@@ -68,13 +74,20 @@ import com.example.demo.service.AuthorServiceImpl;
     }
 
     @Test
-     void testGetAuthorById() throws InvalidIdException {
-      
-        Author author = new Author();
-        author.setId(1L);
-        author.setName("Subbu");
+    void testGetAllAuthors_NoAuthors() {
+        when(authorRepository.findAllActiveAuthors()).thenReturn(Arrays.asList());
 
+        List<Author> authors = authorService.getAll();
+
+        assertNotNull(authors);
+        assertTrue(authors.isEmpty());
+    }
+
+    // Test cases for getAuthorById
+    @Test
+    void testGetAuthorById() throws InvalidIdException {
         when(authorRepository.findById(1L)).thenReturn(Optional.of(author));
+
         Author foundAuthor = authorService.getAuthorById(1L);
 
         assertNotNull(foundAuthor);
@@ -82,36 +95,42 @@ import com.example.demo.service.AuthorServiceImpl;
     }
 
     @Test
-     void testGetAuthorByIdInvalidId() {
-       
+    void testGetAuthorById_InvalidId() {
         when(authorRepository.findById(1L)).thenReturn(Optional.empty());
+
         assertThrows(InvalidIdException.class, () -> {
             authorService.getAuthorById(1L);
         });
     }
 
+    // Test cases for deleteAuthor
     @Test
-     void testDeleteAuthor() throws InvalidIdException {
-       
-        Author author = new Author();
-        author.setId(1L);
-        author.setName("Subbu");
-
+    void testDeleteAuthor_Success() throws InvalidIdException {
         when(authorRepository.findById(1L)).thenReturn(Optional.of(author));
 
         authorService.deleteAuthor(1L);
 
-        verify(bookRepository, times(1)).updateAuthorToNull(1L);
-        verify(authorRepository, times(1)).delete(author);
+        assertEquals("true", author.getIsDeleted());
+        verify(authorRepository, times(1)).save(author);
     }
 
     @Test
-    void testDeleteAuthorInvalidId() {
-    
+    void testDeleteAuthor_AuthorNotFound() {
         when(authorRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(InvalidIdException.class, () -> {
             authorService.deleteAuthor(1L);
         });
+    }
+
+    @Test
+    void testDeleteAuthor_AlreadyDeleted() throws InvalidIdException {
+        author.setIsDeleted("true");
+        when(authorRepository.findById(1L)).thenReturn(Optional.of(author));
+
+        authorService.deleteAuthor(1L);
+
+        assertEquals("true", author.getIsDeleted());
+        verify(authorRepository, times(1)).save(author);
     }
 }
