@@ -8,63 +8,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.exception.InvalidIdException;
-import com.example.demo.model.Author;
 import com.example.demo.model.Book;
-import com.example.demo.model.Publisher;
-import com.example.demo.service.AuthorServiceImpl;
-<<<<<<< HEAD
-import com.example.demo.service.BookServiceImpl;
-import com.example.demo.service.PublisherServiceImpl;
-
-
-=======
 import com.example.demo.service.BookService;
-import com.example.demo.service.PublisherServiceImpl;
-
-import lombok.RequiredArgsConstructor;
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
 
 @RestController
 @RequestMapping("/book")
-
 public class BookController {
 
-<<<<<<< HEAD
-	private final BookServiceImpl bookService;
-    private final AuthorServiceImpl authorService;
-    private final PublisherServiceImpl publisherService;
+    private final BookService bookService;
 
     @Autowired
-    public BookController(BookServiceImpl bookService, AuthorServiceImpl authorService, PublisherServiceImpl publisherService) {
+    public BookController(BookService bookService) {
         this.bookService = bookService;
-        this.authorService = authorService;
-        this.publisherService = publisherService;
     }
 
-=======
-	@Autowired
-    private BookService bookService;
-	
-	@Autowired
-    private AuthorServiceImpl authorService;
-	
-	@Autowired
-    private PublisherServiceImpl publisherService;
-
-//    @PostMapping("/add")
-//    public Book insertBook(@RequestBody Book book) {
-//        return bookService.insert(book);
-//    }
-    
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
     @PostMapping("/add")
     public ResponseEntity<Book> createBook(@RequestBody Book book) throws InvalidIdException {
-        try {
-            Book createdBook = bookService.saveBook(book);
-            return ResponseEntity.ok(createdBook);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+        Book createdBook = bookService.saveBook(book);
+        return ResponseEntity.ok(createdBook);
     }
 
     @GetMapping("/get/all")
@@ -73,91 +34,27 @@ public class BookController {
     }
 
     @GetMapping("/get/{id}")
-<<<<<<< HEAD
-    public ResponseEntity<Book> getBookById(@PathVariable("id") Long id) {
-=======
-    public ResponseEntity<?> getBookById(@PathVariable("id") Long id) {
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
-        try {
-            Book book = bookService.getBookById(id);
-            return ResponseEntity.ok().body(book);
-        } catch (InvalidIdException e) {
-<<<<<<< HEAD
-            return ResponseEntity.badRequest().body(null);
-=======
-            return ResponseEntity.badRequest().body(e.getMessage());
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
-        }
+    public ResponseEntity<Book> getBookById(@PathVariable("id") Long id) throws InvalidIdException {
+        Book book = bookService.getBookById(id);
+        return ResponseEntity.ok().body(book);
     }
 
     @DeleteMapping("/delete/{id}")
-<<<<<<< HEAD
-    public ResponseEntity<Book> deleteBookById(@PathVariable("id") Long id) {
-=======
-    public ResponseEntity<?> deleteBookById(@PathVariable("id") Long id) {
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
-        try {
-            Book book = bookService.getBookById(id);
-            bookService.deleteBook(book.getId());
-            return ResponseEntity.ok().body(book);
-        } catch (InvalidIdException e) {
-<<<<<<< HEAD
-            return ResponseEntity.badRequest().body(null);
-=======
-            return ResponseEntity.badRequest().body(e.getMessage());
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
-        }
+    public ResponseEntity<Void> deleteBookById(@PathVariable("id") Long id) throws InvalidIdException {
+        bookService.deleteBook(id); // Call the service method
+        return ResponseEntity.noContent().build(); // Return 204 No Content
     }
 
     @PutMapping("/update/{id}")
-<<<<<<< HEAD
-    public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @RequestBody Book newbook) {
-=======
-    public ResponseEntity<?> updateBook(@PathVariable("id") Long id, @RequestBody Book newbook) {
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
-        try {
-            Book book = bookService.getBookById(id);
-            if (newbook.getTitle() != null)
-                book.setTitle(newbook.getTitle());
-            if (newbook.getPublicationDate() != null)
-                book.setPublicationDate(newbook.getPublicationDate());
-            if (newbook.getAuthor() != null) {
-                Author author = authorService.getAuthorById(newbook.getAuthor().getId());
-                book.setAuthor(author);
-            }
-
-            if (newbook.getPublisher() != null) {
-                Publisher publisher = publisherService.getPublisherById(newbook.getPublisher().getId());
-                book.setPublisher(publisher);
-            }
-            book = bookService.saveBook(book);
-            return ResponseEntity.ok().body(book);
-
-        } catch (InvalidIdException e) {
-<<<<<<< HEAD
-            return ResponseEntity.badRequest().body(null);
-=======
-            return ResponseEntity.badRequest().body(e.getMessage());
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
-        }
+    public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @RequestBody Book newbook) throws InvalidIdException {
+        Book updatedBook = bookService.updateBook(id, newbook);
+        return ResponseEntity.ok().body(updatedBook);
     }
 
     @GetMapping("/{authorId}")
-<<<<<<< HEAD
-    public ResponseEntity<List<Book>> getBooksByAuthorId(@PathVariable("authorId") Long authorId) {
-=======
-    public ResponseEntity<?> getBooksByAuthorId(@PathVariable("authorId") Long authorId) {
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
-        try {
-            List<Book> books = bookService.getBooksByAuthorId(authorId);
-            return ResponseEntity.ok().body(books);
-        } catch (InvalidIdException e) {
-<<<<<<< HEAD
-            return ResponseEntity.badRequest().body(null);
-=======
-            return ResponseEntity.badRequest().body(e.getMessage());
->>>>>>> abaccced76184e5b6e4a23cd87941991a4cd4ada
-        }
+    public ResponseEntity<List<Book>> getBooksByAuthorId(@PathVariable("authorId") Long authorId) throws InvalidIdException {
+        List<Book> books = bookService.getBooksByAuthorId(authorId);
+        return ResponseEntity.ok().body(books);
     }
 
     @GetMapping("/search")
